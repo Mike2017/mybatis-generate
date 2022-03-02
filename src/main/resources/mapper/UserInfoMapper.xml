@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="age" jdbcType="TINYINT" property="age" />
-    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="status" jdbcType="BIT" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="delete" jdbcType="INTEGER" property="delete" />
@@ -108,7 +108,7 @@
     insert into user (`name`, age, `status`, 
       create_time, update_time, `delete`
       )
-    values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
+    values (#{name,jdbcType=VARCHAR}, #{age,jdbcType=TINYINT}, #{status,jdbcType=BIT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{delete,jdbcType=INTEGER}
       )
   </insert>
@@ -145,7 +145,7 @@
         #{age,jdbcType=TINYINT},
       </if>
       <if test="status != null">
-        #{status,jdbcType=TINYINT},
+        #{status,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -177,7 +177,7 @@
         age = #{record.age,jdbcType=TINYINT},
       </if>
       <if test="record.status != null">
-        `status` = #{record.status,jdbcType=TINYINT},
+        `status` = #{record.status,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -198,7 +198,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
       age = #{record.age,jdbcType=TINYINT},
-      `status` = #{record.status,jdbcType=TINYINT},
+      `status` = #{record.status,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `delete` = #{record.delete,jdbcType=INTEGER}
@@ -216,7 +216,7 @@
         age = #{age,jdbcType=TINYINT},
       </if>
       <if test="status != null">
-        `status` = #{status,jdbcType=TINYINT},
+        `status` = #{status,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -234,7 +234,7 @@
     update user
     set `name` = #{name,jdbcType=VARCHAR},
       age = #{age,jdbcType=TINYINT},
-      `status` = #{status,jdbcType=TINYINT},
+      `status` = #{status,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       `delete` = #{delete,jdbcType=INTEGER}

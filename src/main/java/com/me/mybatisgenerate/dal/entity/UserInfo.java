@@ -9,7 +9,7 @@ public class UserInfo {
 
     private Byte age;
 
-    private Byte status;
+    private Boolean status;
 
     private Date createTime;
 
@@ -41,11 +41,11 @@ public class UserInfo {
         this.age = age;
     }
 
-    public Byte getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 

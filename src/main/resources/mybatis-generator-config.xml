@@ -10,7 +10,20 @@
  https://developer.aliyun.com/article/645347
  todo：
  1、配置文件有点问题，无法读取
- 2、CaseInfoExample改改名
+ 2、表字段byte类型 生成的模型字段是
+    tinyint(1) -> Boolean
+    tinyint(2) -> Byte
+
+   解决方案：
+   https://www.codeleading.com/article/29375407585/
+   1、tinyint -> int
+   2、针对每张表指定对应字段映射后的类型
+   <table schema="xxx" tableName="xxx" >
+            <columnOverride column="xxx" property="xxx" javaType="java.lang.Integer"/>
+            <columnOverride column="is_del" property="isDel" javaType="java.lang.Integer"/>
+   </table>
+   3、自定义TypeResolver，需要打包，未尝试成功
+   https://www.cnblogs.com/keatsCoder/p/12564758.html
 -->
 <generatorConfiguration>
     <!-- 引入配置文件 -->
@@ -91,7 +104,7 @@
         </jdbcConnection>
 
         <!-- 类型转换 -->
-        <javaTypeResolver>
+        <javaTypeResolver type="com.me.mybatisgenerate.MyTypeResolver">
             <!--是否使用bigDecimal，默认false。
                 false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
                 true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal-->
