@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--mybatis的代码生成器相关配置-->
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!--
+ 参考：https://juejin.cn/post/6844903982582743048
+ 字典：https://www.cnblogs.com/throwable/p/12046848.html
+ https://blog.csdn.net/xiaopihai86/article/details/79034079
+ https://developer.aliyun.com/article/645347
+
+ todo：
+ 1、配置文件有点问题，无法读取
+ 2、CaseInfoExample改改名
+-->
+<generatorConfiguration>
+    <!-- 引入配置文件 -->
+<!--    <properties resource="application.properties"/>-->
+
+    <!-- 一个数据库一个context,context的子元素必须按照以下给出的个数、顺序配置
+       property (0..N)
+       plugin (0..N)
+       commentGenerator (0 or 1)
+       jdbcConnection (需要connectionFactory 或 jdbcConnection)
+       javaTypeResolver (0 or 1)
+       javaModelGenerator (至少1个)
+       sqlMapGenerator (0 or 1)
+       javaClientGenerator (0 or 1)
+       table (1..N)
+    -->
+    <!--
+       id : 随便填，保证多个 context id 不重复就行
+       defaultModelType ： 可以不填，默认值 conditional，flat表示一张表对应一个po
+       targetRuntime ：可以不填，默认值 MyBatis3，常用的还有 MyBatis3Simple，这个配置会影响生成的 dao 和 mapper.xml的内容
+               MyBatis3:生成的接口会很多；
+               MyBatis3Simple:只包含最最常用的；
+   -->
+    <context id="myContext" targetRuntime="MyBatis3" defaultModelType="flat">
+
+        <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
+        一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖 -->
+        <property name="autoDelimitKeywords" value="true" />
+        <!-- 指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号 -->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 生成的Java文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化java代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化XML代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!-- 这个插件给生成的Java模型对象增加了equals和hashCode方法 -->
+        <!--<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>-->
+
+        <!-- https://blog.csdn.net/MinggeQingchun/article/details/111039694
+        保证生成的mapper.xml文件在库表字段等变更后会被覆盖，而不是追加
+        -->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
+        <!--
+        mybatis 默认生成的查询辅助类是以Example结尾，往往都使用如下配置改成 Criteria 结尾
+        -->
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$" />
+            <property name="replaceString" value="Criteria" />
+        </plugin>
+
+        <!-- 注释 -->
+        <commentGenerator>
+            <!-- 是否不生成注释，true:不生成-->
+            <property name="suppressAllComments" value="true"/>
+            <!-- 不希望生成的注释中包含时间戳 -->
+            <!--<property name="suppressDate" value="true"/>-->
+            <!-- 添加 db 表中字段的注释，只有suppressAllComments为false时才生效-->
+            <!--<property name="addRemarkComments" value="true"/>-->
+        </commentGenerator>
+
+
+        <!-- jdbc连接 -->
+        <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/Tag?useUnicode=true&amp;allowMultiQueries=true&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+                        driverClass="com.mysql.cj.jdbc.Driver"
+                        userId="root"
+                        password="root">
+            <!--高版本的 mysql-connector-java 需要设置 nullCatalogMeansCurrent=true-->
+            <!--
+            不加此字段，可能导致生成的是当前数据库服务器中其他数据库的同名表
+            参考：https://www.cnblogs.com/coderLeo/p/12770673.html
+            -->
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <!-- 类型转换 -->
+        <javaTypeResolver>
+            <!--是否使用bigDecimal，默认false。
+                false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer
+                true，把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal-->
+            <property name="forceBigDecimals" value="true"/>
+            <!--默认false
+                false，将所有 JDBC 的时间类型解析为 java.util.Date
+                true，将 JDBC 的时间类型按如下规则解析
+                    DATE                    -> java.time.LocalDate
+                    TIME                    -> java.time.LocalTime
+                    TIMESTAMP               -> java.time.LocalDateTime
+                    TIME_WITH_TIMEZONE      -> java.time.OffsetTime
+                    TIMESTAMP_WITH_TIMEZONE  > java.time.OffsetDateTime
+                -->
+            <!--<property name="useJSR310Types" value="false"/>-->
+        </javaTypeResolver>
+
+        <!-- 生成实体类地址 -->
+        <javaModelGenerator targetPackage="com.me.mybatisgenerate.dal.entity" targetProject="src/main/java">
+            <!-- 是否让 schema 作为包的后缀，默认为false
+                 会在entity目录下在创建一个 “数据库名” 的文件夹，生成的 po 会放在该文件夹下
+            -->
+<!--            <property name="enableSubPackages" value="false"/>-->
+            <!-- 是否针对string类型的字段在set方法中进行修剪，默认false
+                  生成的set方法，会执行trim()再返回
+            -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+
+        <!-- 配置Mapper.xml文件的生成目录 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <!--<property name="enableSubPackages" value="false"/>-->
+        </sqlMapGenerator>
+
+        <!-- 生成 XxxMapper.java 接口-->
+        <!-- type="XMLMAPPER" 会将接口的实现放在 mapper.xml中，也推荐这样配置
+             type="ANNOTATEDMAPPER"，接口的实现通过注解写在接口上面,如@Delete、@Insert等注解方式
+        -->
+        <javaClientGenerator targetPackage="com.me.mybatisgenerate.dal.mapper"
+                             targetProject="src/main/java" type="XMLMAPPER">
+            <!--<property name="enableSubPackages" value="false"/>-->
+        </javaClientGenerator>
+
+
+        <!-- schema为数据库名，oracle需要配置，mysql不需要配置。
+             tableName为对应的数据库表名
+             domainObjectName 是要生成的实体类名(可以不指定，默认按帕斯卡命名法将表名转换成类名)
+             enableXXXByExample 默认为 true， 为 true 会生成一个对应Example帮助类，帮助你进行条件查询，不想要可以设为false
+             enableXXXByExample 默认为true,只有在targetRuntime="MyBatis3"时才生效
+             -->
+        <!--        <table schema="" tableName="user" domainObjectName="User"-->
+        <!--               enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+        <!--               enableUpdateByExample="false" selectByExampleQueryId="false">-->
+        <!--是否使用实际列名,默认为false-->
+        <!--<property name="useActualColumnNames" value="false" />-->
+        <!--        </table>-->
+        <table tableName="user" domainObjectName="UserInfo">
+            <!--
+            generatedKey用于指定生成主键的方法，如果需要插入后获取主键，可添加此标签；
+            如果设置了该元素，MBG会在生成的<insert>元素中生成一条正确的<selectKey>元素，该元素可选
+            column:主键的列名；
+            sqlStatement：要生成的selectKey语句，有以下可选项：
+                Cloudscape:相当于selectKey的SQL为： VALUES IDENTITY_VAL_LOCAL()
+                DB2       :相当于selectKey的SQL为： VALUES IDENTITY_VAL_LOCAL()
+                DB2_MF    :相当于selectKey的SQL为：SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1
+                Derby     :相当于selectKey的SQL为：VALUES IDENTITY_VAL_LOCAL()
+                HSQLDB    :相当于selectKey的SQL为：CALL IDENTITY()
+                Informix  :相当于selectKey的SQL为：select dbinfo('sqlca.sqlerrd1') from systables where tabid=1
+                MySql     :相当于selectKey的SQL为：SELECT LAST_INSERT_ID()
+                SqlServer :相当于selectKey的SQL为：SELECT SCOPE_IDENTITY()
+                SYBASE    :相当于selectKey的SQL为：SELECT @@IDENTITY
+                JDBC      :相当于在生成的insert元素上添加useGeneratedKeys="true"和keyProperty属性
+           可选属性:identity(默认为false)和type；
+            type=post，则identity:true，生成的<selectKey>中的order=AFTER，生成的元素将放置在插入之后;
+            type=pre,则identity:false, 生成的<selectKey>中的order=BEFORE,生成的元素将放置在插入之前;
+            (可以这么理解，自动增长的列只有插入到数据库后才能得到ID，所以是AFTER;
+             使用序列时，只有先获取序列之后，才能插入数据库，所以是BEFORE)
+            -->
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="city" domainObjectName="City">
+        </table>
+
+    </context>
+</generatorConfiguration>
